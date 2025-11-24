@@ -90,6 +90,20 @@
     dest: /etc/udev/rules.d/99-waveshare-touch.rules
     mode: '0644'
 
+- name: Create a custom udev rule for the udscan adapter
+  ansible.builtin.copy:
+    content: |
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="606f", SYMLINK+="canusb_adapter", GROUP="dialout", MODE="0666"      
+    dest: /etc/udev/rules.d/99-usb-can-adapter.rules
+    mode: '0644'
+
+- name: Create a custom udev rule for the um7 imu
+  ansible.builtin.copy:
+    content: |
+      SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="ttyUM7_IMU", GROUP="dialout", MODE="0666"      
+    dest: /etc/udev/rules.d/99-um7-imu.rules
+    mode: '0644'
+
 - name: Create a custom netplan
   ansible.builtin.copy:
     content: |
