@@ -1,7 +1,0 @@
----
-- name: Install NVTOP
-  become: true
-  apt:
-    state: present
-    pkg:
-      - nvtop

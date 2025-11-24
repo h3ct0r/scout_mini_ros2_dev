@@ -1,9 +1,14 @@
 ---
-- hosts: all
+- hosts: localhost
+  connection: local
   become: true
   vars:
     ansible_become: yes 
     ansible_become_method: sudo
+    # ssh_auth credentials come from ansible vault
+    provider_rw:
+      username:  "{{ credentials['scout_ubuntu_systemrw'].username }}"
+      password:  "{{ credentials['scout_ubuntu_systemrw'].password }}"
   pre_tasks:
     - name: System details
       debug: msg="{{ item }}"
@@ -16,15 +21,11 @@
       apt: update_cache=yes
       changed_when: False
   tasks:
-    - include_tasks: tasks/git.yaml
+    - include_tasks: tasks/general_so_config.yaml
     - include_tasks: tasks/main-packages.yaml
     - include_tasks: tasks/docker.yaml
     - include_tasks: tasks/nvidia-toolkit.yaml
-    - include_tasks: tasks/ubuntu-restricted-extras.yaml
-    - include_tasks: tasks/other-packages.yaml
-    - include_tasks: tasks/nvidia-toolkit.yaml
     - include_tasks: tasks/power-management.yaml
-    - include_tasks: tasks/nvtop.yaml
   post_tasks:
     - name: Remove useless packages from the cache
       become: true

@@ -1,6 +1,0 @@
----
-- name: Setting timezone
-  community.general.timezone:
-    name: America/Sao_Paulo
-  tags:
-    - timezone

@@ -1,7 +1,0 @@
----
-- name: Install Git Packages
-  become: true
-  apt:
-    state: present
-    pkg:
-    - git

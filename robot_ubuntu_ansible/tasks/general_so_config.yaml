@@ -1,0 +1,120 @@
+- name: Add scout to groups
+  ansible.builtin.user:
+    name: "scout"
+    groups: sudo, docker, dialout
+    append: true
+
+- name: Set the system hostname
+  ansible.builtin.hostname:
+    name: "scout"
+  register: hostname_change
+
+- name: Setting timezone
+  community.general.timezone:
+    name: America/Sao_Paulo
+  tags:
+    - timezone
+
+- name: Install Ubuntu restricted extras
+  become: true
+  apt:
+    state: present
+    pkg:
+    - ubuntu-restricted-extras
+
+- name: Create a custom grub configuration file to disable IPv6
+  ansible.builtin.copy:
+    content: |
+      # UPDATED WITH ANSIBLE
+      # If you change this file, run 'update-grub' afterwards to update
+      # /boot/grub/grub.cfg.
+      # For full documentation of the options in this file, see:
+      #   info -f grub -n 'Simple configuration'
+
+      GRUB_DEFAULT=0
+      GRUB_TIMEOUT_STYLE=hidden
+      GRUB_TIMEOUT=0
+      GRUB_DISTRIBUTOR=`( . /etc/os-release; echo ${NAME:-Ubuntu} ) 2>/dev/null || echo Ubuntu`
+      GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ipv6.disable=1"
+      GRUB_CMDLINE_LINUX=""
+
+      # If your computer has multiple operating systems installed, then you
+      # probably want to run os-prober. However, if your computer is a host
+      # for guest OSes installed via LVM or raw disk devices, running
+      # os-prober can cause damage to those guest OSes as it mounts
+      # filesystems to look for things.
+      #GRUB_DISABLE_OS_PROBER=false
+
+      # Uncomment to enable BadRAM filtering, modify to suit your needs
+      # This works with Linux (no patch required) and with any kernel that obtains
+      # the memory map information from GRUB (GNU Mach, kernel of FreeBSD ...)
+      #GRUB_BADRAM="0x01234567,0xfefefefe,0x89abcdef,0xefefefef"
+
+      # Uncomment to disable graphical terminal
+      #GRUB_TERMINAL=console
+
+      # The resolution used on graphical terminal
+      # note that you can use only modes which your graphic card supports via VBE
+      # you can see them in real GRUB with the command `vbeinfo'
+      #GRUB_GFXMODE=640x480
+
+      # Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
+      #GRUB_DISABLE_LINUX_UUID=true
+
+      # Uncomment to disable generation of recovery mode menu entries
+      #GRUB_DISABLE_RECOVERY="true"
+
+      # Uncomment to get a beep at grub start
+      #GRUB_INIT_TUNE="480 440 1"
+    dest: /etc/default/grub
+    mode: '0644'
+  register: grub_config_file
+
+- name: Update GRUB configuration
+  ansible.builtin.command: update-grub
+  when: grub_config_file.changed
+  register: update_grub_result
+  changed_when: update_grub_result.rc != 0
+
+- name: Create a custom udev rule for the waveshare screen
+  ansible.builtin.copy:
+    content: |
+      #90°:
+      ENV{ID_INPUT_TOUCHSCREEN}=="1", ENV{LIBINPUT_CALIBRATION_MATRIX}="0 -1 1 1 0 0"
+
+      #180°:
+      #ENV{ID_INPUT_TOUCHSCREEN}=="1", ENV{LIBINPUT_CALIBRATION_MATRIX}="-1 0 1 0 -1 1"
+
+      #270°:
+      #ENV{ID_INPUT_TOUCHSCREEN}=="1", ENV{LIBINPUT_CALIBRATION_MATRIX}="0 1 0 -1 0 1"
+    dest: /etc/udev/rules.d/99-waveshare-touch.rules
+    mode: '0644'
+
+- name: Create a custom netplan
+  ansible.builtin.copy:
+    content: |
+      # UPDATED WITH ANSIBLE
+      network:
+        version: 2
+        renderer: networkd
+        ethernets:
+          enp2s0:
+            addresses:
+              - 192.168.2.10/24
+              - 192.168.1.10/24
+            dhcp4: yes
+            dhcp6: no
+    dest: /etc/netplan/50-cloud-init.yaml
+    mode: '0644'
+  register: netplan_config_file
+
+- name: Apply netplan
+  ansible.builtin.command: netplan apply
+  when: netplan_config_file.changed
+
+- name: Create a custom udev rule for the waveshare screen
+  ansible.builtin.copy:
+    content: |
+      gnome-session
+    dest: /home/scout/.xsession
+    mode: '0777'

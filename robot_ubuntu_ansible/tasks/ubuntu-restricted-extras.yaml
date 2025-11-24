@@ -1,7 +1,0 @@
----
-- name: Install Ubuntu restricted extras
-  become: true
-  apt:
-    state: present
-    pkg:
-    - ubuntu-restricted-extras
