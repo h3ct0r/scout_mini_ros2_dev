@@ -36,3 +36,9 @@
     name: docker
     enabled: yes
     state: started
+    
+- name: Add scout to groups
+  ansible.builtin.user:
+    name: "scout"
+    groups: docker
+    append: true

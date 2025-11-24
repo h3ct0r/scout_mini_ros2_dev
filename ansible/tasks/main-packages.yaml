@@ -34,6 +34,25 @@
     - iperf3
     - tree
     - locate
+ 
+- name: Download ASC key
+  ansible.builtin.get_url:
+    url: "https://packages.microsoft.com/keys/microsoft.asc"
+    dest: "/usr/share/keyrings/microsoft.asc"
+    mode: "0644"
+        
+- name: Add vscode repository into sources list
+  apt_repository:
+    repo: deb [arch=amd64, signed-by=/usr/share/keyrings/microsoft.asc] https://packages.microsoft.com/repos/code stable main
+    state: present
+    filename: vscode
+
+- name: Install vscode
+  apt:
+    name:
+      - code
+    state: latest
+    update_cache: true
 
 - name: Install GPG key for SubLimeText
   apt_key:

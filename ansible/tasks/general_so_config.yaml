@@ -1,7 +1,7 @@
 - name: Add scout to groups
   ansible.builtin.user:
     name: "scout"
-    groups: sudo, docker, dialout
+    groups: sudo, dialout
     append: true
 
 - name: Set the system hostname
