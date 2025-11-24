@@ -1,0 +1,34 @@
+---
+- name: Install Main Packages
+  become: true
+  apt:
+    state: present
+    pkg:
+    - vim
+    - curl
+    - wget
+    - tree
+    - net-tools
+    - apt-transport-https
+    - zip 
+    - unzip
+    - build-essential
+    - htop
+    - btop
+    - byobu
+    - tmux
+    - smartmontools
+    - nmap
+    - ethtool
+    - etherwake
+    - wakeonlan
+    - sshfs
+    - ncdu
+    - mc
+    - lm-sensors
+    - cmake
+    - sshpass
+    - can-utils
+    - net-tools
+    - iperf3
+    - tree

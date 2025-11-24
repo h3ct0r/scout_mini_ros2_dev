@@ -1,0 +1,5 @@
+- name: Add existing user '{{ user }}' to group sudo
+  ansible.builtin.user:
+    name: '{{ user }}'
+    groups: sudo, docker, dialout
+    append: true

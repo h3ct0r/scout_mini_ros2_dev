@@ -1,0 +1,36 @@
+---
+- name: Deactivate sleep mode
+  ansible.builtin.systemd:
+    name: sleep.target
+    enabled: no
+    state: stopped
+
+- name: Deactivate hibernate mode
+  ansible.builtin.systemd:
+    name: hibernate.target
+    enabled: no
+    state: stopped
+
+- name: Deactivate suspend mode
+  ansible.builtin.systemd:
+    name: suspend.target
+    enabled: no
+    state: stopped
+
+- name: Deactivate hybrid-sleep mode
+  ansible.builtin.systemd:
+    name: hybrid-sleep.target
+    enabled: no
+    state: stopped
+
+- name: Set idle delay to 0 (disable screen blanking)
+  ansible.builtin.command: >
+    gsettings set org.gnome.desktop.session idle-delay 0
+
+- name: Disable screen lock
+  ansible.builtin.command: >
+    gsettings set org.gnome.desktop.screensaver lock-enabled false
+
+- name: Disable automatic screen lock after blanking
+  ansible.builtin.command: >
+    gsettings set org.gnome.desktop.screensaver idle-activation-enabled false

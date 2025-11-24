@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  vars:
+    ansible_become: yes 
+    ansible_become_method: sudo
+  pre_tasks:
+    - name: System details
+      debug: msg="{{ item }}"
+      with_items: 
+      - "{{ ansible_distribution }}"
+      - "{{ ansible_distribution_release }}"
+      - "{{ ansible_distribution_version }}"
+      - "{{ ansible_distribution_major_version }}"
+    - name: update repositories
+      apt: update_cache=yes
+      changed_when: False
+  tasks:
+    - include_tasks: tasks/git.yaml
+    - include_tasks: tasks/main-packages.yaml
+    - include_tasks: tasks/docker.yaml
+    - include_tasks: tasks/nvidia-toolkit.yaml
+    - include_tasks: tasks/ubuntu-restricted-extras.yaml
+    - include_tasks: tasks/other-packages.yaml
+    - include_tasks: tasks/nvidia-toolkit.yaml
+    - include_tasks: tasks/power-management.yaml
+    - include_tasks: tasks/nvtop.yaml
+  post_tasks:
+    - name: Remove useless packages from the cache
+      become: true
+      apt:
+        autoclean: yes
+    - name: Remove dependencies that are no longer required
+      become: true
+      apt:
+        autoremove: yes

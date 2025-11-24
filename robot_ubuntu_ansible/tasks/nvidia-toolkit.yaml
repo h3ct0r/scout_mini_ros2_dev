@@ -1,0 +1,47 @@
+---
+- name: Add Nvidia repo gpg key
+  become: true
+  apt_key:
+    url: "https://nvidia.github.io/nvidia-docker/gpgkey"
+    state: present
+
+- name: Add Nvidia apt repo
+  get_url:
+    url: "https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list"
+    dest: "/etc/apt/sources.list.d/nvidia-container-toolkit.list"
+    mode: 0644
+
+- name: Install Nvidia container runtime and toolkit
+  apt:
+    name:
+      - nvidia-container-runtime
+      - nvidia-container-toolkit
+      - uidmap
+    state: present
+    update_cache: yes
+
+- name: Create /etc/docker/daemon.json file with nvidia toolkit bindings
+  become: true
+  command: nvidia-ctk runtime configure --runtime=docker
+
+# Change the default nvidia-container-runtime config.toml file 
+# to be compatible with docker rootless mode and 
+# allow the use of nvidia-container-cli without cgroups
+# Reference: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#rootless-mode
+- name: Create a backup of /etc/nvidia-container-runtime/config.toml
+  become: true
+  copy:
+    src: /etc/nvidia-container-runtime/config.toml
+    dest: /etc/nvidia-container-runtime/config.toml.bkp
+    remote_src: yes
+    force: false
+
+- name: Create /etc/docker/daemon.json file with nvidia toolkit bindings
+  become: true
+  command: nvidia-ctk config --set nvidia-container-cli.no-cgroups --in-place
+
+
+- name: Restart docker service 
+  service:
+    name: docker
+    state: restarted 
