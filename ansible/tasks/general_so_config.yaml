@@ -131,3 +131,9 @@
       gnome-session
     dest: /home/scout/.xsession
     mode: '0777'
+
+- name: Add an environment variable to the remote user's shell.
+  lineinfile:
+    dest: "/home/scout/.bashrc"
+    line: |
+      export PS1='[robot]\[\e[38;5;206m\]\u\[\e[38;5;160m\]@\[\e[38;5;127m\]\h \[\e[38;5;131m\]\w \[\033[0m\]$ '
