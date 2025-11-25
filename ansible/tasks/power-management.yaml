@@ -34,3 +34,21 @@
 - name: Disable automatic screen lock after blanking
   ansible.builtin.command: >
     gsettings set org.gnome.desktop.screensaver idle-activation-enabled false
+
+- name: Set AC power suspend type to 'nothing'
+  community.general.dconf:
+    key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type"
+    value: "'nothing'"
+    state: present
+
+- name: Set battery power suspend type to 'nothing'
+  community.general.dconf:
+    key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-battery-type"
+    value: "'nothing'"
+    state: present
+
+- name: Set idle delay to 0 (disables screen lock/blanking)
+  community.general.dconf:
+    key: "/org/gnome/desktop/session/idle-delay"
+    value: "0"
+    state: present

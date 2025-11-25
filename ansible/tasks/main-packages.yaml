@@ -40,12 +40,22 @@
     url: "https://packages.microsoft.com/keys/microsoft.asc"
     dest: "/usr/share/keyrings/microsoft.asc"
     mode: "0644"
-        
-- name: Add vscode repository into sources list
-  apt_repository:
-    repo: deb [arch=amd64, signed-by=/usr/share/keyrings/microsoft.asc] https://packages.microsoft.com/repos/code stable main
-    state: present
-    filename: vscode
+
+- name: convert vscode key to gpg
+  ansible.builtin.shell:
+    cmd: "cat /usr/share/keyrings/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft.gpg"
+
+- name: Create a custom vscode sources for apt
+  ansible.builtin.copy:
+    content: |
+      Types: deb
+      URIs: https://packages.microsoft.com/repos/code
+      Suites: stable
+      Components: main
+      Architectures: amd64,arm64,armhf
+      Signed-By: /usr/share/keyrings/microsoft.gpg
+    dest: /etc/apt/sources.list.d/vscode.sources
+    mode: '0644'
 
 - name: Install vscode
   apt:
