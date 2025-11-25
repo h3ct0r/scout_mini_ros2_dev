@@ -117,6 +117,11 @@
               - 192.168.2.10/24
             dhcp4: yes
             dhcp6: no
+            nameservers:
+              addresses:
+                - 1.1.1.1
+                - 8.8.8.8
+                - 8.8.4.4
     dest: /etc/netplan/50-cloud-init.yaml
     mode: '0644'
   register: netplan_config_file
@@ -137,3 +142,42 @@
     dest: "/home/scout/.bashrc"
     line: |
       export PS1='[robot]\[\e[38;5;206m\]\u\[\e[38;5;160m\]@\[\e[38;5;127m\]\h \[\e[38;5;131m\]\w \[\033[0m\]$ '
+
+- name: Disable power management for WiFi interfaces (bug that was making internet very slow)
+  ansible.builtin.copy:
+    content: |
+      # UPDATED WITH ANSIBLE
+      [connection]
+      wifi.powersave = 2
+    dest: /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+    mode: '0644'
+
+- name: Speedup DNS queries
+  ansible.builtin.copy:
+    content: |
+      # UPDATED WITH ANSIBLE
+      # /etc/nsswitch.conf
+      #
+      # Example configuration of GNU Name Service Switch functionality.
+      # If you have the `glibc-doc-reference' and `info' packages installed, try:
+      # `info libc "Name Service Switch"' for information about this file.
+
+      passwd:         files systemd sss
+      group:          files systemd sss
+      shadow:         files systemd sss
+      gshadow:        files systemd
+
+      # old version: hosts:          files mdns4_minimal [NOTFOUND=return] dns
+      hosts:          files dns
+      networks:       files
+
+      protocols:      db files
+      services:       db files sss
+      ethers:         db files
+      rpc:            db files
+
+      netgroup:       nis sss
+      automount:  sss
+    dest: /etc/nsswitch.conf
+    mode: '0644'
+
