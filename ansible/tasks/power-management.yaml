@@ -24,14 +24,20 @@
     state: stopped
 
 - name: Set idle delay to 0 (disable screen blanking)
+  become: yes
+  become_user: scout
   ansible.builtin.command: >
     gsettings set org.gnome.desktop.session idle-delay 0
 
 - name: Disable screen lock
+  become: yes
+  become_user: scout
   ansible.builtin.command: >
     gsettings set org.gnome.desktop.screensaver lock-enabled false
 
 - name: Disable automatic screen lock after blanking
+  become: yes
+  become_user: scout
   ansible.builtin.command: >
     gsettings set org.gnome.desktop.screensaver idle-activation-enabled false
 
