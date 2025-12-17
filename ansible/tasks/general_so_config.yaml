@@ -181,3 +181,34 @@
     dest: /etc/nsswitch.conf
     mode: '0644'
 
+- name: Setup the scale of the display to visualize more screen real-state
+  ansible.builtin.lineinfile:
+    path: /home/scout/.config/monitors.xml
+    regexp: '<scale>1</scale>'
+    line: '<scale>0.75</scale>'
+    backup: true # Creates a backup file before making changes
+
+- name: Ensure gs_usb module is loaded
+  community.general.modprobe:
+    name: gs_usb
+    state: present
+
+- name: Create a custom can config file
+  ansible.builtin.copy:
+    content: |
+      # UPDATED WITH ANSIBLE
+      [Match]
+      Name=can*
+
+      [CAN]
+      BitRate=500K
+    dest: /etc/systemd/network/80-can.network
+    mode: '0644'
+  register: can_networkd_config_file
+
+# - name: Restart systemd-networkd service to allow can changes
+#   ansible.builtin.systemd:
+#     name: systemd-networkd
+#     state: restarted
+#     daemon_reload: true
+#   become: true

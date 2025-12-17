@@ -22,10 +22,10 @@
       changed_when: False
   tasks:
     - include_tasks: tasks/general_so_config.yaml
-    - include_tasks: tasks/main-packages.yaml
-    - include_tasks: tasks/docker.yaml
-    - include_tasks: tasks/nvidia-toolkit.yaml
-    - include_tasks: tasks/power-management.yaml
+    # - include_tasks: tasks/main-packages.yaml
+    # - include_tasks: tasks/docker.yaml
+    # - include_tasks: tasks/nvidia-toolkit.yaml
+    # - include_tasks: tasks/power-management.yaml
   post_tasks:
     - name: Remove useless packages from the cache
       become: true

@@ -34,6 +34,7 @@
     - iperf3
     - tree
     - locate
+    - can-utils
  
 - name: Download ASC key
   ansible.builtin.get_url:
