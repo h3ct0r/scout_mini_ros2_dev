@@ -9,6 +9,9 @@
     provider_rw:
       username:  "{{ credentials['scout_ubuntu_systemrw'].username }}"
       password:  "{{ credentials['scout_ubuntu_systemrw'].password }}"
+    swap_vars:
+      size: 16G
+      swappiness: 60
   pre_tasks:
     - name: System details
       debug: msg="{{ item }}"
@@ -26,6 +29,7 @@
     - include_tasks: tasks/docker.yaml
     - include_tasks: tasks/nvidia-toolkit.yaml
     - include_tasks: tasks/power-management.yaml
+    - include_tasks: tasks/swap_config.yaml
   post_tasks:
     - name: Remove useless packages from the cache
       become: true

@@ -25,3 +25,20 @@ echo -e "\nsource ~/py3.12/bin/activate" >> ~/.bashrc
 Run ansible configuration for host embeded PC:
 
 - `ansible-playbook -c local -i localhost, robot_ubuntu_playbook.yaml -vvv  -e "ansible_become_password=scout"`
+
+
+## Run the robot
+
+ros2 launch scout_base scout_base.launch.py 
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+# sim
+
+ros2 launch agilex_scout simulate_control_gazebo.launch.py lidar_type:=3d rviz:=true
+
+$ ros2 launch scout_nav2 nav2.launch.py simulation:=true slam:=<true|false> localization:=<amcl|slam_toolbox>
+
+
+## Nav2
+
+ros2 launch scout_nav2 nav2.launch.py simulation:=false slam:=true

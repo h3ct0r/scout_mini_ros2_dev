@@ -1,0 +1,29 @@
+---
+- name: Check whether "/swap.img" exists
+  register: idCheckSwap
+  stat:
+    path: /swap.img
+
+- name: Deactivate it if "/swap.img" exists
+  shell: swapoff /swap.img
+  when: idCheckSwap.stat.exists == true
+
+- name: Allocate the swap file
+  shell: fallocate -l {{ swap_vars.size }} /swap.img
+
+- name: Change permission of the swap file
+  file:
+    path: /swap.img
+    mode: 600
+
+- name: Create a swap area on the swap file
+  shell: mkswap /swap.img
+
+- name: Activate the swap file as a swap memory
+  shell: swapon /swap.img
+
+- name: Append configuration in /etc/fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: /swap.img       none    swap    sw      0       0
+    create: yes
