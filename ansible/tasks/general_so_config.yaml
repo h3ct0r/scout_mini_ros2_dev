@@ -193,7 +193,7 @@
     name: gs_usb
     state: present
 
-- name: Create a custom can config file
+- name: Create a custom can network config file for systemd
   ansible.builtin.copy:
     content: |
       # UPDATED WITH ANSIBLE
@@ -201,14 +201,73 @@
       Name=can*
 
       [CAN]
-      BitRate=500K
+      BitRate=500000
+      FDMode=no
+
+      [Link]
+      RequiredForOnline=yes
+      ActivationPolicy=always-up
     dest: /etc/systemd/network/80-can.network
     mode: '0644'
   register: can_networkd_config_file
 
-# - name: Restart systemd-networkd service to allow can changes
+- name: Create a custom can link config file for systemd
+  ansible.builtin.copy:
+    content: |
+      # UPDATED WITH ANSIBLE
+      [Match]
+      Type=can
+
+      [Link]
+      TransmitQueueLength=1000
+    dest: /etc/systemd/network/80-can.link
+    mode: '0644'
+  register: can_networkd_config_file
+
+# - name: Create a custom can service file
+#   ansible.builtin.copy:
+#     content: |
+#       # UPDATED WITH ANSIBLE
+#       [Unit]
+#       Description=CAN0 Service
+#       After=network.target
+
+#       # [Service]
+#       # Type=oneshot
+#       # ExecStart=/bin/ip link set can0 down
+#       # ExecStart=/bin/ip link set can0 up
+#       # ExecStart=touch /tmp/can0_up_from_can0.service
+#       # Restart=on-failure
+#       # RestartSec=10
+
+#       [Service]
+#       Type=simple
+#       ExecStartPre=/bin/ip l set can0 down
+#       ExecStartPre=/bin/ip l set can0 down
+#       ExecStart=/bin/ip l set can0 up
+#       Environment="PYTHONUNBUFFERED=1"
+#       Restart=always
+#       RestartSec=30
+
+#       [Install]
+#       WantedBy=multi-user.target
+#     dest: /etc/systemd/system/can0.service
+#     mode: '0644'
+#   register: can_networkd_config_file
+
+# /etc/udev/rules.d/99-can-txqueuelen.rules
+# SUBSYSTEM=="net", ACTION=="add|change", KERNEL=="can*", ATTR{tx_queue_len}="1000"
+
+# - name: Enable can0 service
 #   ansible.builtin.systemd:
-#     name: systemd-networkd
-#     state: restarted
+#     name: can0.service
+#     enabled: true
 #     daemon_reload: true
 #   become: true
+
+- name: Disable cups
+  ansible.builtin.systemd:
+    name: cups-browsed
+    enabled: false
+    daemon_reload: true
+  become: true
