@@ -35,6 +35,7 @@
     - tree
     - locate
     - can-utils
+    - lz4
  
 - name: Download ASC key
   ansible.builtin.get_url:
