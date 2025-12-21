@@ -49,7 +49,7 @@ bt_navigator:
     ros__parameters:
         global_frame: map
         robot_base_frame: mobile_robot_base_link
-        odom_topic: /odometry
+        odom_topic: /odom
         bt_loop_duration: 10 # ms
         default_server_timeout: 20 # ms
         wait_for_server_timeout: 1000 # ms
@@ -136,7 +136,7 @@ controller_server:
         goal_checker_plugins: ["goal_checker"]
         controller_plugins: ["FollowPath"]
         use_realtime_priority: false
-        odom_topic: /odometry
+        odom_topic: /odom
 
         # Progress checker parameters
         progress_checker:
@@ -492,7 +492,7 @@ velocity_smoother:
         min_velocity: [-1.0, 0.0, -0.5]
         max_accel: [2.5, 0.0, 2.0]
         max_decel: [-2.5, 0.0, -2.0]
-        odom_topic: /odometry
+        odom_topic: /odom
         odom_duration: 0.1
         deadband_velocity: [0.0, 0.0, 0.0]
         velocity_timeout: 1.0
@@ -517,7 +517,7 @@ slam_toolbox:
 
         debug_logging: false
         throttle_scans: 1
-        transform_publish_period: 0.02 #if 0 never publishes odometry
+        transform_publish_period: 0.02 #if 0 never publishes odom
         map_update_interval: 5.0
         resolution: 0.05
         max_laser_range: 16.0 #for rastering images
