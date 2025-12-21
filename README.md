@@ -45,3 +45,8 @@ ros2 launch scout_nav2 nav2.launch.py simulation:=false slam:=true
 
 
 tar --use-compress-program=lz4 -cf lapinha_rosbag2_2025_12_19-11_04_23.tar
+
+
+## Compile
+
+MAKEFLAGS="-j6" colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
