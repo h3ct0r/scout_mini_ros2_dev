@@ -105,7 +105,7 @@ https://answers.ros.org/question/246914/four-wheeled-skid-steering-in-gazebo-and
 				<odom_publish_frequency>50</odom_publish_frequency>
 				<tf_topic>/scout/tf</tf_topic>
 			</xacro:if>
-			<frame_id>odom</frame_id>
+			<frame_id>wheel_odom</frame_id>
 			<child_frame_id>base_footprint</child_frame_id>
 			<max_linear_acceleration>2</max_linear_acceleration>
 			<min_linear_acceleration>-2</min_linear_acceleration>
@@ -120,13 +120,77 @@ https://answers.ros.org/question/246914/four-wheeled-skid-steering-in-gazebo-and
 
 	<!-- ........................... IMU config ................................... -->
 
-	<gazebo reference="imu_frame">
+	<!-- <gazebo reference="imu_frame">
 		<sensor name="imu_sensor" type="imu">
 			<always_on>1</always_on>
 			<update_rate>100</update_rate>
 			<ignition_frame_id>imu_frame</ignition_frame_id>
 			<visualize>true</visualize>
 			<topic>/scout/imu</topic>
+		</sensor>
+	</gazebo> -->
+
+	<gazebo reference="imu_frame">
+		<sensor name="imu_sensor" type="imu">
+			<always_on>true</always_on>
+			<update_rate>100</update_rate>
+			<visualize>true</visualize>
+			<topic>/scout/imu</topic>
+			<gz_frame_id>imu_frame</gz_frame_id>
+			<imu>
+				<angular_velocity>
+					<x>
+						<noise type="gaussian">
+							<mean>0.0</mean>
+							<stddev>2e-4</stddev>
+							<bias_mean>0.0000075</bias_mean>
+							<bias_stddev>0.0000008</bias_stddev>
+						</noise>
+					</x>
+					<y>
+						<noise type="gaussian">
+							<mean>0.0</mean>
+							<stddev>2e-4</stddev>
+							<bias_mean>0.0000075</bias_mean>
+							<bias_stddev>0.0000008</bias_stddev>
+						</noise>
+					</y>
+					<z>
+						<noise type="gaussian">
+							<mean>0.0</mean>
+							<stddev>2e-4</stddev>
+							<bias_mean>0.0000075</bias_mean>
+							<bias_stddev>0.0000008</bias_stddev>
+						</noise>
+					</z>
+				</angular_velocity>
+				<linear_acceleration>
+					<x>
+						<noise type="gaussian">
+							<mean>0.0</mean>
+							<stddev>1.7e-2</stddev>
+							<bias_mean>0.1</bias_mean>
+							<bias_stddev>0.001</bias_stddev>
+						</noise>
+					</x>
+					<y>
+						<noise type="gaussian">
+							<mean>0.0</mean>
+							<stddev>1.7e-2</stddev>
+							<bias_mean>0.1</bias_mean>
+							<bias_stddev>0.001</bias_stddev>
+						</noise>
+					</y>
+					<z>
+						<noise type="gaussian">
+							<mean>0.0</mean>
+							<stddev>1.7e-2</stddev>
+							<bias_mean>0.1</bias_mean>
+							<bias_stddev>0.001</bias_stddev>
+						</noise>
+					</z>
+				</linear_acceleration>
+			</imu>
 		</sensor>
 	</gazebo>
 
@@ -136,9 +200,9 @@ https://answers.ros.org/question/246914/four-wheeled-skid-steering-in-gazebo-and
 		<gazebo>
 			<plugin filename="libignition-gazebo6-odometry-publisher-system"
 				name="ignition::gazebo::systems::OdometryPublisher">
-				<odom_frame>odom</odom_frame>
+				<odom_frame>wheel_odom</odom_frame>
 				<robot_base_frame>base_footprint</robot_base_frame>
-				<odom_topic>/scout/odometry</odom_topic>
+				<odom_topic>/wheel_odom</odom_topic>
 				<tf_topic>/scout/tf</tf_topic>
 				<dimensions>2</dimensions>
 				<odom_publish_frequency>50</odom_publish_frequency>
@@ -216,6 +280,4 @@ https://answers.ros.org/question/246914/four-wheeled-skid-steering-in-gazebo-and
 			<visualize>true</visualize>
 		</sensor>
 	</gazebo>
-
-
 </robot>

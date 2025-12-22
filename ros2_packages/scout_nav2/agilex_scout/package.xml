@@ -3,9 +3,9 @@
 <package format="3">
 	<name>agilex_scout</name>
 	<version>0.0.0</version>
-	<description>This package contains the URDF and XACRO macros for the definition of the configuration files
-		for the AgileX Scout robot. This package supports visualization and control in Gazebo
-	</description>
+	<description>This package contains the URDF and XACRO macros for the definition of the
+		configuration files for the AgileX Scout robot. This package supports visualization and
+		control in Gazebo </description>
 
 	<maintainer email="simone.giampa@mail.polimi.it">Simone Giampà</maintainer>
 	<license>AIRLAB</license>
@@ -17,6 +17,7 @@
 	<exec_depend>rviz2</exec_depend>
 	<exec_depend>urdf</exec_depend>
 	<exec_depend>xacro</exec_depend>
+	<exec_depend>robot_localization</exec_depend>
 	<exec_depend>joint_state_publisher_gui</exec_depend>
 	<depend>pluginlib</depend>
 	<depend>ign</depend>

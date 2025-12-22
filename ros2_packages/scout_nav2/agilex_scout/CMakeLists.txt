@@ -21,5 +21,4 @@ install(DIRECTORY meshes launch urdf rviz config
 	DESTINATION share/${PROJECT_NAME}
 )
 
-
 ament_package()

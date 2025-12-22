@@ -78,7 +78,7 @@ def generate_launch_description():
         description='Yaml config file path'
     )
     declare_config_file_cmd = DeclareLaunchArgument(
-        'config_file', default_value='fastlio_velodyne_sim.yaml',
+        'config_file', default_value='sim.fastlio_velodyne.yaml',
         description='Config file'
     )
     declare_rviz_cmd = DeclareLaunchArgument(

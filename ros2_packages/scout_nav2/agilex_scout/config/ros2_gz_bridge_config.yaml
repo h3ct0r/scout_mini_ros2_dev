@@ -19,12 +19,13 @@
   gz_type_name: "ignition.msgs.Odometry"
   direction: GZ_TO_ROS
 
+# dont use direct /tf from Gazebo as we will fuse wheel odometry + imu in robot_localization
 # scout pose tf
-- ros_topic_name: "/tf"
-  gz_topic_name: "/scout/tf"
-  ros_type_name: "tf2_msgs/msg/TFMessage"
-  gz_type_name: "ignition.msgs.Pose_V"
-  direction: GZ_TO_ROS
+# - ros_topic_name: "/tf"
+#   gz_topic_name: "/scout/tf"
+#   ros_type_name: "tf2_msgs/msg/TFMessage"
+#   gz_type_name: "ignition.msgs.Pose_V"
+#   direction: GZ_TO_ROS
 
 # lidar 2d scan
 - ros_topic_name: "/laser_scan"
@@ -42,7 +43,7 @@
   
 # joint positions (wheels rotation)
 # default = world name
-- ros_topic_name: "/scout/joint_states"
+- ros_topic_name: "/joint_states"
   gz_topic_name: "/world/default/model/scout_v2/joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
   gz_type_name: "ignition.msgs.Model"
