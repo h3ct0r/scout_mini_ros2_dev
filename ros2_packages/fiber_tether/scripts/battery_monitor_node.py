@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
 
 import serial
 
 from std_msgs.msg import String
-from tether_fibra.msg import BatteryMonitorStatus
+from fiber_tether.msg import BatteryMonitorStatus  # pyright: ignore[reportAttributeAccessIssue]
 
 # Your udev link, place in /etc/udev/rules.d
 # Rule for the USB-C-Serial adapter for the XY-DJ Battery Control Board
@@ -15,7 +17,7 @@ from tether_fibra.msg import BatteryMonitorStatus
 class BattMonitor(Node):
     def __init__(self):
         super().__init__('batt_monitor_tether_node')
-        self.publisher_ = self.create_publisher(BatteryMonitorStatus, '/battery/statu', 10)
+        self.publisher_ = self.create_publisher(BatteryMonitorStatus, '/battery/status', 10)
         
         SERIAL_PORT = '/dev/ttyBattery'  
         BAUD_RATE = 115200                  
@@ -102,11 +104,11 @@ def main(args=None):
 
     try:
         rclpy.spin(batt_monitor)
-    except SystemExit:
-        rclpy.logging.get_logger("Quitting").info('Done')
+    except (SystemExit, KeyboardInterrupt):
+        rclpy.logging.get_logger("Quitting").info('Done') # pyright: ignore[reportAttributeAccessIssue]
 
-    batt_monitor.destroy_node()
     batt_monitor.close_serial_connection()
+    batt_monitor.destroy_node()
     
     rclpy.shutdown()    
 
