@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32, String
+from geometry_msgs.msg import Twist
 from rclpy.duration import Duration
 
 import math
@@ -81,8 +82,8 @@ class MotorControllerNode(Node):
             sys.exit(1)
 
         self.cmd_sub = self.create_subscription(
-            Float32,
-            '/tether_control/cmd_speed_mm_s',
+            Twist,
+            '/cmd_vel',
             self.cmd_callback,
             10)
         self.status_pub = self.create_publisher(String, '/tether_control/status', 10)
@@ -91,10 +92,10 @@ class MotorControllerNode(Node):
         self.get_logger().warn(f"Safety Check is turned on!")
         self.get_logger().warn(f"Motors STOPS automatically if time between cmd_speed_mm_s exceeded the timeout of {self.timeout_seconds:.1f} seconds")
         
-        self.motor_cmd_timer = self.create_timer(1.0, self.send_motor_cmd)  
+        self.motor_cmd_timer = self.create_timer(0.1, self.send_motor_cmd)  
         
     def send_motor_cmd(self):
-        if self.target_speed_mm_s > 0 and self.get_clock().now() - self.last_msg_time >= Duration(seconds=2):
+        if self.target_speed_mm_s > 0 and self.get_clock().now() - self.last_msg_time >= Duration(seconds=1):
             self.target_speed_mm_s = 0
             self.get_logger().warn(f"Speed set to 0 due delay in cmd command")
             
@@ -150,9 +151,13 @@ class MotorControllerNode(Node):
 
         return motor_drum_cmd, motor_screw_cmd
 
-    def cmd_callback(self, msg: Float32):
+    def cmd_callback(self, msg: Twist):
         """Callback chamada quando uma nova mensagem de velocidade (Float32) é recebida."""
-        self.target_speed_mm_s = msg.data # Velocidade desejada em mm/s (positivo para desenrolar, negativo para enrolar)
+        raw_vel_mps = msg.linear.x #, msg.angular.z)
+        
+        #msg.data # Velocidade desejada em mm/s (positivo para desenrolar, negativo para enrolar)
+        
+        self.target_speed_mm_s = raw_vel_mps * 1000
         self.last_msg_time = self.get_clock().now()
         self.get_logger().info(f"Speed received: {self.target_speed_mm_s:.2f} mm/s")
 
