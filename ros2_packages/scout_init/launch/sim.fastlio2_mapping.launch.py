@@ -40,32 +40,9 @@ def generate_launch_description():
             "--roll",
             "0.0",
             "--frame-id",
-            "map",
+            "odom",
             "--child-frame-id",
             "camera_init",
-        ],
-    )
-    
-    static_tf2 = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        arguments=[
-            "--x",
-            "0.0",
-            "--y",
-            "0.0",
-            "--z",
-            "0.0",
-            "--yaw",
-            "0.0",
-            "--pitch",
-            "0.0",
-            "--roll",
-            "0.0",
-            "--frame-id",
-            "world",
-            "--child-frame-id",
-            "odom",
         ],
     )
 
@@ -95,7 +72,11 @@ def generate_launch_description():
         executable='fastlio_mapping',
         parameters=[PathJoinSubstitution([config_path, config_file]),
                     {'use_sim_time': use_sim_time}],
-        output='screen'
+        output='screen',
+        remappings=[
+            ('/Odometry', '/lidar_odom'),
+            ('/Laser_map', '/fastlio_map_cloud'),
+        ]
     )
     rviz_node = Node(
         package='rviz2',
@@ -106,7 +87,6 @@ def generate_launch_description():
 
     ld = LaunchDescription()
     ld.add_action(static_tf)
-    ld.add_action(static_tf2)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_config_path_cmd)
     ld.add_action(declare_config_file_cmd)
