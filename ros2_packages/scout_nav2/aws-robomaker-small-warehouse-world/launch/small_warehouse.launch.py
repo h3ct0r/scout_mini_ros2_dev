@@ -56,11 +56,15 @@ def generate_launch_description():
         "gazebo_gui.config",
     )
 
-    # Ignition Gazebo 6 environment variables (local to the running instance)
-    env = {  # IGN GAZEBO FORTRESS env variables
-        "IGN_GAZEBO_SYSTEM_PLUGIN_PATH": ":".join(
+    # Gazebo Fortress (Humble) is "ign gazebo" and reads IGN_*; Harmonic (Jazzy) and later
+    # are "gz sim" and read GZ_*
+    fortress = environ.get("ROS_DISTRO") == "humble"
+    gazebo_cmd = "ign gazebo" if fortress else "gz sim"
+    plugin_path_var = "IGN_GAZEBO_SYSTEM_PLUGIN_PATH" if fortress else "GZ_SIM_SYSTEM_PLUGIN_PATH"
+    env = {
+        plugin_path_var: ":".join(
             [
-                environ.get("IGN_GAZEBO_SYSTEM_PLUGIN_PATH", default=""),
+                environ.get(plugin_path_var, default=""),
                 environ.get("LD_LIBRARY_PATH", default=""),
             ]
         ),
@@ -69,7 +73,7 @@ def generate_launch_description():
     # Setup to launch the simulator and Gazebo world
     gazebo_sim_process = ExecuteProcess(
         cmd=[
-            "ign gazebo",
+            gazebo_cmd,
             #"--verbose 4 -s -r --headless-rendering",
             "--verbose 1 -r --gui-config " + gazebo_config_gui_file,
             world,
