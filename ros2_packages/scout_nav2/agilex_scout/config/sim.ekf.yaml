@@ -45,3 +45,17 @@ ekf_filter_node:
                       false, false, false,
                       false, false, true,
                       false, false, false]
+
+        # # X,Y,Z,roll,pitch,yaw,X',Y',Z',roll',pitch',yaw',X'',Y'',Z''
+        odom1: /lidar_odom
+        odom1_config: [true, true, false, # X, Y, Z
+                      false, false,  true, # Roll, Pitch, Yaw
+                      false, false, false, # Vx, Vy, Vz
+                      false, false, false, # Vroll, Vpitch, Vyaw 
+                      false, false, false] # Ax, Ay, Az
+        odom1_differential: false
+        odom1_relative: true
+        odom1_queue_size: 2
+
+
+        

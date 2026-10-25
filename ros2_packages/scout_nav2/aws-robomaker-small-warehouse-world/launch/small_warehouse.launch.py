@@ -70,6 +70,7 @@ def generate_launch_description():
     gazebo_sim_process = ExecuteProcess(
         cmd=[
             "ign gazebo",
+            #"--verbose 4 -s -r --headless-rendering",
             "--verbose 1 -r --gui-config " + gazebo_config_gui_file,
             world,
         ],
