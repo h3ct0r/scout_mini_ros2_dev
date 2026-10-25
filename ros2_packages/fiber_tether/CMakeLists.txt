@@ -27,6 +27,7 @@ install(PROGRAMS
   scripts/battery_monitor_node.py
   scripts/dynamixel_motor.py
   scripts/motor_controller_node.py
+  scripts/odometry_total_distance.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
