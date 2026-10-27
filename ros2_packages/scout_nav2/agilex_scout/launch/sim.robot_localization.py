@@ -36,8 +36,32 @@ def generate_launch_description():
         parameters=[robot_localization_conf_file, {'use_sim_time': True}]
     )
 
+    static_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=[
+            "--x",
+            "0.0",
+            "--y",
+            "0.0",
+            "--z",
+            "0.0",
+            "--yaw",
+            "0.0",
+            "--pitch",
+            "0.0",
+            "--roll",
+            "0.0",
+            "--frame-id",
+            "world",
+            "--child-frame-id",
+            "odom",
+        ],
+    )
+
     return LaunchDescription(
         [
             robot_localization_node,
+            #static_tf
         ]
     )

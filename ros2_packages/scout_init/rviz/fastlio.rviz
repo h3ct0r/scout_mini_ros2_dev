@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /CloudMap1
       Splitter Ratio: 0.5
     Tree Height: 565
   - Class: rviz_common/Selection
@@ -25,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: CloudMap
 Visualization Manager:
   Class: ""
   Displays:
@@ -38,6 +39,8 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        body:
+          Value: true
         camera_init:
           Value: true
         front_left_wheel_link:
@@ -48,11 +51,7 @@ Visualization Manager:
           Value: true
         imu_frame:
           Value: true
-        inertial_link:
-          Value: true
         lidar_3d:
-          Value: true
-        map:
           Value: true
         mobile_robot_base_link:
           Value: true
@@ -64,17 +63,35 @@ Visualization Manager:
           Value: true
         rear_right_wheel_link:
           Value: true
-        world:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        map:
+        odom:
+          base_footprint:
+            base_link:
+              mobile_robot_base_link:
+                front_left_wheel_link:
+                  {}
+                front_mount:
+                  {}
+                front_right_wheel_link:
+                  {}
+                imu_frame:
+                  {}
+                lidar_3d:
+                  {}
+                rear_left_wheel_link:
+                  {}
+                rear_mount:
+                  {}
+                rear_right_wheel_link:
+                  {}
           camera_init:
-            {}
+            body:
+              {}
       Update Interval: 0
       Value: true
     - Angle Tolerance: 0.10000000149011612
@@ -215,8 +232,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 27.343822479248047
-        Min Value: -25.84477424621582
+        Max Value: 6.155220985412598
+        Min Value: -0.6381005048751831
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -242,7 +259,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /Laser_map
+        Value: /fastlio_map_cloud
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -292,25 +309,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 12.17992877960205
+      Distance: 17.065631866455078
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -2.3511722087860107
-        Y: -1.0806796550750732
-        Z: 2.1075668334960938
+        X: -1.654405951499939
+        Y: 0.7878547310829163
+        Z: 1.8355072736740112
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3697965443134308
+      Pitch: 0.9747962951660156
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 3.405383586883545
+      Yaw: 2.085381507873535
     Saved: ~
 Window Geometry:
   Displays:

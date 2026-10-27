@@ -26,7 +26,7 @@ def generate_launch_description():
     # NOTE: odometry source wheel encoders doesn't work for a skid steering kinematics robot yet
     odometry_source_arg = DeclareLaunchArgument(
         name="odometry_source",
-        default_value="ground_truth",
+        default_value="encoders",
         description="Odometry source (ground_truth or wheel encoders)",
         choices=["encoders", "ground_truth"],
     )
@@ -55,6 +55,7 @@ def generate_launch_description():
             [
                 aws_small_warehouse_dir,
                 "/launch/no_roof_small_warehouse.launch.py",
+                #"/launch/simple_env1.launch.py",
             ]
         )
     )
@@ -180,11 +181,11 @@ def generate_launch_description():
     # 	parameters=[{"use_sim_time": True}]
     # )
  
-    robot_localization_conf_file = os.path.join(
-        get_package_share_directory("agilex_scout"),
-        "config",
-        "sim.ekf.yaml",
-    )
+    # robot_localization_conf_file = os.path.join(
+    #     get_package_share_directory("agilex_scout"),
+    #     "config",
+    #     "sim.ekf.yaml",
+    # )
  
     # robot_localization_node = Node(
     #     package='robot_localization',
